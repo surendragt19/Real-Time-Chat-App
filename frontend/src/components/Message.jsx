@@ -17,7 +17,7 @@ const Message = () => {
           </div>
           <div className="flex flex-col flex-1">
             <div className="flex justify-between gap-2">
-              <p>Ram</p>
+              <p>Surendra</p>
             </div>
           </div>
         </div>
