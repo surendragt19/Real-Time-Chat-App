@@ -39,7 +39,7 @@ export const getMsgController=async (req,res)=>{
         const conversation=await Converstion.findOne({
             participants:{$all:[senderId,reciverId]}
         }).populate("message")
-        console.log(conversation)
+        console.log(conversation?.message)
     } catch (error) {
         console.log(error)
     }

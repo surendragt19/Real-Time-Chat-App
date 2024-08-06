@@ -8,17 +8,26 @@ export const registerController = async (req, res) => {
     try {
     const { username, fullname, password, gender, confirmPassword } = req.body;
         if (!fullname || !username || !password || !gender || !confirmPassword) {
-            return res.status(400).json({ status: 'All fields are required' });
+          return res.status(401).json({
+            message: "All Firels Required",
+            success: false
+        })
         }
 
         if (password !== confirmPassword) {
-            return res.status(400).json({ status: 'Passwords do not match' });
+          return res.status(401).json({
+            message: "Password Not Match.",
+            success: false
+        })
         }
 
         const existingUser = await User.findOne({ username });
 
         if (existingUser) {
-            return res.status(400).json({ status: 'Username is already taken' });
+          return res.status(401).json({
+            message: "Your Username is Already takken",
+            success: false
+        })
         }
 
         const hashPassword = await bcryptjs.hash(password, 10);
@@ -36,10 +45,15 @@ export const registerController = async (req, res) => {
             profilePhoto
         });
 
-        res.status(201).json({ status: 'User created successfully', newUser });
+        return res.status(201).json({
+          message: "Account created successfully.",
+          success: true
+      })
     } catch (error) {
-        console.error('Error during registration:', error);
-        res.status(500).json({ status: 'Server error' });
+        return res.status(501).json({
+          message: "Server Error during registration.",
+          success: false
+      })
     }
 };
 
@@ -66,7 +80,7 @@ export const loginController = async (req, res) => {
   
       res.status(201)
         .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true })
-        .json({ status: "Login successful", _id: userExist._id, username: userExist.username, token });
+        .json({ status: "Login successful", _id: userExist._id, username: userExist.username,fullname:userExist.fullname,profilePhoto:userExist.profilePhoto, token });
     } catch (error) {
       console.error('Error during login:', error);
       res.status(500).json({ status: 'Server error' });
